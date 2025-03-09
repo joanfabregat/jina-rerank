@@ -1,4 +1,4 @@
-PYTHON_VERSION=3.13
+ARG PYTHON_VERSION=3.13
 
 # --- Builder Stage ---
 FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
@@ -48,4 +48,4 @@ USER app
 EXPOSE $PORT
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}

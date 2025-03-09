@@ -19,8 +19,7 @@ class RerankRequest(BaseModel):
     max_length: int = Field(1024, description="Maximum sequence length for the model")
 
 
-class ScoredDocument(BaseModel):
-    document: Document
+class ScoredDocument(Document):
     score: float
     rank: int
 

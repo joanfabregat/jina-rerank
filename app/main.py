@@ -39,7 +39,7 @@ async def rerank(request: RerankRequest = Body(...)):
         # Create the response with ranked documents (preserving metadata)
         scored_documents = [
             ScoredDocument(
-                document=doc,
+                **doc.model_dump(),
                 score=float(score),
                 rank=i + 1
             )

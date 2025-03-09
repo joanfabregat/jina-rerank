@@ -1,6 +1,6 @@
 # Multilingual Reranker API
 
-[![Build and Push](https://github.com/joanfabregat/reranker/actions/workflows/docker-hub.yaml/badge.svg)](https://github.com/joanfabregat/reranker/actions/workflows/docker-hub.yaml)
+[![Build and Push to GHCR](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml/badge.svg)](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml)
 
 A FastAPI service that reranks documents based on query relevance using Jina's multilingual reranker model.
 

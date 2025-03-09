@@ -23,9 +23,6 @@ app = FastAPI(
 
 @app.post("/rerank", response_model=RerankResponse)
 async def rerank(request: RerankRequest = Body(...)):
-    if len(request.documents) < 2:
-        raise HTTPException(status_code=400, detail="At least 2 documents are required for reranking")
-
     start_time = time.time()
 
     try:

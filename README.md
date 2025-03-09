@@ -126,10 +126,10 @@ The API responds with appropriate HTTP status codes:
 
 ```bash
 # Build Docker image
-docker build -t reranker .
+docker build -t jina-reranker .
 
 # Run container
-docker run -p 8000:8000 reranker
+docker run -p 8000:8000 jina-reranker
 ```
 
 ## License

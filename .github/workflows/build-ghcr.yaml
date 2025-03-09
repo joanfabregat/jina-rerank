@@ -17,6 +17,10 @@ on:
 env:
   GHCR_IMAGE: "ghcr.io/joanfabregat/reranker"
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -52,7 +56,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.DOCKERHUB_IMAGE }}
             ${{ env.GHCR_IMAGE }}
           tags: |
             type=raw,value=${{ github.ref_name }}

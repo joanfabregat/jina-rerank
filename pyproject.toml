@@ -1,0 +1,16 @@
+[project]
+name = "reranker"
+version = "v0.1.0"
+description = "Multilingual Reranker API"
+authors = [
+    { name = "Joan Fabrégat", email = "jfabregat@fogandfrog.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.95.0",
+    "uvicorn>=0.22.0",
+    "pydantic>=2.0.0",
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "einops>=0.8.1",
+]

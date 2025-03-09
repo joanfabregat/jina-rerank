@@ -1,0 +1,9 @@
+/.idea
+/.venv
+/.env
+.DS_Store
+/var
+**/__pycache__/
+**/*.pyc
+.git/
+.github/

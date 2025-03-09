@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field
 
 
 class Document(BaseModel):
-    text: str
-    metadata: dict[str, str] = {}
+    text: str = Field(..., description="The text of the document")
+    metadata: dict[str, str] = Field({}, description="Metadata of the document")
 
 
 class RerankRequest(BaseModel):

@@ -11,7 +11,7 @@ from fastapi import FastAPI, HTTPException, Body
 import time
 
 from .config import VERSION, PORT, BUILD_ID, COMMIT_SHA
-from .model import model, device, MODEL_NAME
+from .model import model, MODEL_NAME
 from .types import RerankRequest, RerankResponse, ScoredDocument
 
 app = FastAPI(
@@ -58,7 +58,6 @@ async def rerank(request: RerankRequest = Body(...)):
 async def root():
     return {
         "model_name": MODEL_NAME,
-        "device": device,
         "version": VERSION,
         "build_id": BUILD_ID,
         "commit_sha": COMMIT_SHA,

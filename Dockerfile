@@ -49,4 +49,5 @@ RUN python -m app.model
 
 EXPOSE $PORT
 #CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
-CMD exec uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 0
+#CMD exec uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 0
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --log-level info --timeout-keep-alive 0"]

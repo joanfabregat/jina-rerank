@@ -23,3 +23,4 @@ class ScoredDocument(BaseModel):
 class RerankResponse(BaseModel):
     ranked_documents: list[ScoredDocument]
     query: str
+    computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")

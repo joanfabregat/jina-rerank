@@ -8,6 +8,7 @@
 import torch
 import uvicorn
 from fastapi import FastAPI, HTTPException, Body
+import time
 
 from .config import VERSION, PORT, BUILD_ID, COMMIT_SHA
 from .model import model, device, MODEL_NAME
@@ -24,6 +25,8 @@ app = FastAPI(
 async def rerank(request: RerankRequest = Body(...)):
     if len(request.documents) < 2:
         raise HTTPException(status_code=400, detail="At least 2 documents are required for reranking")
+
+    start_time = time.time()
 
     try:
         sentence_pairs = [[request.query, document] for document in request.documents]
@@ -43,7 +46,8 @@ async def rerank(request: RerankRequest = Body(...)):
 
         return RerankResponse(
             ranked_documents=scored_documents,
-            query=request.query
+            query=request.query,
+            computation_time=time.time() - start_time,
         )
 
     except Exception as e:

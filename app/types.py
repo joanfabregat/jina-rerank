@@ -8,14 +8,19 @@
 from pydantic import BaseModel, Field
 
 
+class Document(BaseModel):
+    text: str
+    metadata: dict[str, str] = {}
+
+
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
-    documents: list[str] = Field(..., description="List of documents to rerank", min_items=1)
+    documents: list[Document] = Field(..., description="List of documents to rerank", min_items=1)
     max_length: int = Field(1024, description="Maximum sequence length for the model")
 
 
 class ScoredDocument(BaseModel):
-    document: str
+    document: Document
     score: float
     rank: int
 

@@ -29,18 +29,23 @@ async def rerank(request: RerankRequest = Body(...)):
     start_time = time.time()
 
     try:
-        sentence_pairs = [[request.query, document] for document in request.documents]
+        # Create sentence pairs for the model
+        sentence_pairs = [[request.query, doc.text] for doc in request.documents]
 
         with torch.no_grad():
             scores = model.compute_score(sentence_pairs, max_length=1024)
 
-        # Create tuples of (document, score) and sort by score in descending order
+        # Create tuples of (document with metadata, score) and sort by score
         doc_scores = list(zip(request.documents, scores))
         ranked_docs = sorted(doc_scores, key=lambda x: x[1], reverse=True)
 
-        # Create the response with ranked documents
+        # Create the response with ranked documents (preserving metadata)
         scored_documents = [
-            ScoredDocument(document=doc, score=float(score), rank=i + 1)
+            ScoredDocument(
+                document=doc,
+                score=float(score),
+                rank=i + 1
+            )
             for i, (doc, score) in enumerate(ranked_docs)
         ]
 

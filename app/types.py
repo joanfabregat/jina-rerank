@@ -15,7 +15,7 @@ class Document(BaseModel):
 
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
-    documents: list[Document] = Field(..., description="List of documents to rerank", min_items=1)
+    documents: list[Document] = Field(..., description="List of documents to rerank", min_items=2)
     max_length: int = Field(1024, description="Maximum sequence length for the model")
 
 

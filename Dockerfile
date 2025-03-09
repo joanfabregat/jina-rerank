@@ -41,7 +41,7 @@ COPY app/ ./app/
 RUN addgroup --system app &&  \
     adduser --system --group --no-create-home app && \
     chmod -R +x .venv/bin/ && \
-    chown -R app:app .venv/
+    chown -R app:app .
 USER app
 
 # Download the model

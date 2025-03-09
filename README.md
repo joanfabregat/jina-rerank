@@ -2,7 +2,7 @@
 
 [![Build and Push to GHCR](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml/badge.svg)](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml)
 
-A FastAPI service that reranks documents based on query relevance using Jina's multilingual reranker model.
+A FastAPI service that reranks documents based on query relevance using Jina's multilingual reranker model [`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual).
 
 ## Overview
 

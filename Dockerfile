@@ -28,6 +28,7 @@ ENV PORT=${PORT}
 ENV VERSION=${VERSION}
 ENV BUILD_ID=${BUILD_ID}
 ENV COMMIT_SHA=${COMMIT_SHA}
+ENV HF_HOME="/app/.cache/huggingface"
 
 # Copy the virtual environment
 COPY --from=builder /app/.venv .venv

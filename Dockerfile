@@ -29,11 +29,11 @@ ENV VERSION=${VERSION}
 ENV BUILD_ID=${BUILD_ID}
 ENV COMMIT_SHA=${COMMIT_SHA}
 
-# Copy only the needed virtual environment from builder
+# Copy the virtual environment
 COPY --from=builder /app/.venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy only necessary application files
+# Copy the application code
 COPY app/ ./app/
 
 # Ensure a non-root user
@@ -43,9 +43,9 @@ RUN addgroup --system app &&  \
     chown -R app:app .venv/
 USER app
 
-# https://cloud.google.com/run/docs/tips/python#optimize_gunicorn
-# Expose the port the app runs on
-EXPOSE $PORT
+# Download the model
+RUN python -m app.model
 
-# Command to run the application
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
+EXPOSE $PORT
+#CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
+CMD exec uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 0

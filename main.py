@@ -9,32 +9,33 @@ import time
 import torch
 import uvicorn
 from fastapi import FastAPI, HTTPException, Body
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, conlist
 from transformers import AutoModelForSequenceClassification
 
 
 ##
 # Models
 ##
-class Models:
-    class Document(BaseModel):
-        text: str = Field(..., description="The text of the document")
-        metadata: dict[str, str] = Field(default_factory=dict, description="Metadata of the document")
+class Document(BaseModel):
+    text: str = Field(..., description="The text of the document")
+    metadata: dict[str, str] = Field(default_factory=dict, description="Metadata of the document")
 
-    class ScoredDocument(Document):
-        score: float
-        rank: int
 
-    class RerankRequest(BaseModel):
-        query: str = Field(..., description="The search query")
-        # noinspection PyArgumentList
-        documents: list["Models.Document"] = Field(..., description="List of documents to rerank", min_items=2)
-        max_length: int = Field(1024, description="Maximum sequence length for the model")
+class ScoredDocument(Document):
+    score: float
+    rank: int
 
-    class RerankResponse(BaseModel):
-        ranked_documents: list["Models.ScoredDocument"]
-        query: str
-        computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")
+
+class RerankRequest(BaseModel):
+    query: str = Field(..., description="The search query")
+    documents: conlist(Document, min_length=2) = Field(..., description="List of documents to rerank")
+    max_length: int = Field(1024, description="Maximum sequence length for the model")
+
+
+class RerankResponse(BaseModel):
+    ranked_documents: list[ScoredDocument]
+    query: str
+    computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")
 
 
 ##
@@ -71,8 +72,8 @@ except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")
 
 
-@app.post("/rerank", response_model=Models.RerankResponse)
-async def rerank(request: Models.RerankRequest = Body(...)):
+@app.post("/rerank", response_model=RerankResponse)
+async def rerank(request: RerankRequest = Body(...)):
     start_time = time.time()
 
     try:
@@ -84,15 +85,15 @@ async def rerank(request: Models.RerankRequest = Body(...)):
         doc_scores = list(zip(request.documents, scores))
         ranked_docs = sorted(doc_scores, key=lambda x: x[1], reverse=True)
         scored_documents = [
-            Models.ScoredDocument(
-                **doc.model_dump(),
+            ScoredDocument(
+                rank=i + 1,
                 score=float(score),
-                rank=i + 1
+                **doc.model_dump(),
             )
             for i, (doc, score) in enumerate(ranked_docs)
         ]
 
-        return Models.RerankResponse(
+        return RerankResponse(
             ranked_documents=scored_documents,
             query=request.query,
             computation_time=time.time() - start_time,

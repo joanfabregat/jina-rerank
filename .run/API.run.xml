@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API" type="Python.FastAPI">
-    <option name="file" value="$PROJECT_DIR$/app/main.py" />
+    <option name="file" value="$PROJECT_DIR$/main.py" />
     <module name="jina-reranker" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />

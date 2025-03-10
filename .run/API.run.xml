@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API" type="Python.FastAPI">
+    <option name="additionalOptions" value="--reload --port=8001" />
     <option name="file" value="$PROJECT_DIR$/main.py" />
     <module name="jina-rerank" />
     <option name="ENV_FILES" value="" />

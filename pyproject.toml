@@ -1,7 +1,8 @@
 [project]
-name = "reranker"
-version = "v0.1.0"
-description = "Multilingual Reranker API"
+name = "jina-rerank"
+version = "v0.1.x"
+url = "https://github.com/joanfabregat/jina-rerank"
+description = "A multilingual reranker API based on jinaai/jina-reranker-v2-base-multilingual"
 authors = [
     { name = "Joan Fabrégat", email = "jfabregat@fogandfrog.com" }
 ]

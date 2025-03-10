@@ -15,9 +15,8 @@ on:
       - 'v*'
 
 env:
-  GHCR_IMAGE: "ghcr.io/joanfabregat/jina-reranker"
-  DOCKERHUB_IMAGE: "joanfabregat/jina-reranker"
-
+  GHCR_IMAGE: "ghcr.io/joanfabregat/reranker-api"
+  DOCKERHUB_IMAGE: "joanfabregat/reranker-api"
 
 permissions:
   contents: read

@@ -35,7 +35,7 @@ COPY --from=builder /app/.venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the application code
-COPY app/ ./app/
+COPY main.py .
 
 # Ensure a non-root user
 RUN addgroup --system app &&  \

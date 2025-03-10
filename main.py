@@ -12,6 +12,15 @@ from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel, Field, conlist
 from transformers import AutoModelForSequenceClassification
 
+##
+# Load the config
+##
+MODEL_NAME = 'jinaai/jina-reranker-v2-base-multilingual'
+VERSION = os.getenv("VERSION") or "unknown"
+BUILD_ID = os.getenv("BUILD_ID") or "unknown"
+COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
+PORT = int(os.getenv("PORT", "8000"))
+
 
 ##
 # Models
@@ -39,20 +48,11 @@ class RerankResponse(BaseModel):
 
 
 class RootResponse(BaseModel):
-    model_name: str
-    version: str
-    build_id: str
-    commit_sha: str
+    model_name: str = MODEL_NAME
+    version: str = VERSION
+    build_id: str = BUILD_ID
+    commit_sha: str = COMMIT_SHA
 
-
-##
-# Load the config
-##
-MODEL_NAME = 'jinaai/jina-reranker-v2-base-multilingual'
-VERSION = os.getenv("VERSION") or "unknown"
-BUILD_ID = os.getenv("BUILD_ID") or "unknown"
-COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
-PORT = int(os.getenv("PORT", "8000"))
 
 ##
 # Create the FastAPI app
@@ -112,12 +112,7 @@ async def rerank(request: RerankRequest = Body(...)):
 
 @app.get("/", response_model=RootResponse)
 async def root():
-    return RootResponse(
-        model_name=MODEL_NAME,
-        version=VERSION,
-        build_id=BUILD_ID,
-        commit_sha=COMMIT_SHA,
-    )
+    return RootResponse()
 
 
 if __name__ == "__main__":

@@ -7,8 +7,8 @@ import os
 import time
 
 import torch
-import uvicorn
 from fastapi import FastAPI, HTTPException, Body
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field, conlist
 from transformers import AutoModelForSequenceClassification
 
@@ -47,8 +47,9 @@ class RerankResponse(BaseModel):
     computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")
 
 
-class RootResponse(BaseModel):
+class InfoResponse(BaseModel):
     model_name: str = MODEL_NAME
+    device: str
     version: str = VERSION
     build_id: str = BUILD_ID
     commit_sha: str = COMMIT_SHA
@@ -59,7 +60,7 @@ class RootResponse(BaseModel):
 ##
 app = FastAPI(
     title="Multilingual Reranker API",
-    description="API for reranking documents based on query relevance using Jina's multilingual reranker",
+    description=f"API for reranking documents based on query relevance using {MODEL_NAME}",
     version=VERSION,
 )
 
@@ -73,10 +74,29 @@ try:
         torch_dtype="auto",
         trust_remote_code=True,
     )
+    device = (
+        torch.device("cuda") if torch.cuda.is_available()
+        else torch.device("mps") if torch.mps.is_available()
+        else torch.device("cpu")
+    )
     model.eval()
+    model.to(device)
     print(f"Model {MODEL_NAME} loaded successfully")
 except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")
+
+
+##
+# Routes
+##
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/info", response_model=InfoResponse)
+async def info():
+    return InfoResponse(device=str(device))
 
 
 @app.post("/rerank", response_model=RerankResponse)
@@ -110,16 +130,17 @@ async def rerank(request: RerankRequest = Body(...)):
         raise HTTPException(status_code=500, detail=f"Error during reranking: {str(e)}") from e
 
 
-@app.get("/", response_model=RootResponse)
-async def root():
-    return RootResponse()
-
-
 if __name__ == "__main__":
     import sys
 
     command = sys.argv[1] if len(sys.argv) > 1 else "serve"
+
+    # Start the server
     if command == "serve":
+        import uvicorn
+
         uvicorn.run("main:app", host="0.0.0.0", port=PORT)
+
+    # Download the model
     elif command == "download":
         sys.exit(0)

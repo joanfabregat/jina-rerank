@@ -38,6 +38,13 @@ class RerankResponse(BaseModel):
     computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")
 
 
+class RootResponse(BaseModel):
+    model_name: str
+    version: str
+    build_id: str
+    commit_sha: str
+
+
 ##
 # Load the config
 ##
@@ -103,14 +110,14 @@ async def rerank(request: RerankRequest = Body(...)):
         raise HTTPException(status_code=500, detail=f"Error during reranking: {str(e)}") from e
 
 
-@app.get("/")
+@app.get("/", response_model=RootResponse)
 async def root():
-    return {
-        "model_name": MODEL_NAME,
-        "version": VERSION,
-        "build_id": BUILD_ID,
-        "commit_sha": COMMIT_SHA,
-    }
+    return RootResponse(
+        model_name=MODEL_NAME,
+        version=VERSION,
+        build_id=BUILD_ID,
+        commit_sha=COMMIT_SHA,
+    )
 
 
 if __name__ == "__main__":

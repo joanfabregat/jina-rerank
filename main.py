@@ -27,7 +27,7 @@ PORT = int(os.getenv("PORT", "8000"))
 ##
 class Document(BaseModel):
     text: str = Field(..., description="The text of the document")
-    metadata: dict[str, str] = Field(default_factory=dict, description="Metadata of the document")
+    metadata: dict[str, any] = Field(default_factory=dict, description="Metadata of the document")
 
 
 class ScoredDocument(Document):

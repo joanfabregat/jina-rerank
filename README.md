@@ -103,6 +103,9 @@ Reranks a list of documents based on their relevance to a query.
 ## Environment Variables
 
 - `PORT`: Port to run the server on (default: 8000)
+- `VERSION`: The version of the service (default: "unknown")
+- `BUILD_ID`: The build identifier (default: "unknown")
+- `COMMIT_SHA`: The commit SHA (default: "unknown")
 
 ## License
 

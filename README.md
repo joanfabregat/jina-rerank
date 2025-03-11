@@ -2,44 +2,48 @@
 
 [![Build and Push to GHCR and Docker Hub](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml/badge.svg)](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml)
 
-A FastAPI service that provides document reranking capabilities based on query relevance using the [`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual) model.
+A FastAPI-based service that provides document reranking capabilities based on query relevance using the
+[`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual) model.
 
 ## Overview
 
-This API allows you to rerank a list of documents based on their relevance to a given query. It utilizes a cross-encoder reranking model from Jina AI that supports multiple languages.
+This API enables users to rerank a collection of documents based on their relevance to a specific query. It leverages a
+multilingual reranker model that can handle content in multiple languages.
 
 ## Features
 
-- Multilingual support for document reranking
-- REST API with FastAPI
-- Automatic API documentation
-- Docker support
-
-## Requirements
-
-- Python 3.13+
-- FastAPI
-- Pydantic
-- fastembed
-- uvicorn (for serving)
+- **Document Reranking**: Rerank documents based on their relevance to a search query
+- **Multilingual Support**: Works with content in multiple languages
+- **Metadata Preservation**: Maintains document metadata throughout the reranking process
+- **Performance Metrics**: Includes computation time in responses
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/codeinc/multilingual-reranker.git
-   cd multilingual-reranker
-   ```
+### Requirements
 
+- Python 3.13
+- FastAPI
+- Uvicorn
+- Fastembed
+- Pydantic
+
+### Setup
+
+1. Clone the repository
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
 
-3. Download the model:
-   ```bash
-   python main.py download
-   ```
+```bash
+# Using UV
+uv sync --frozen
+# Using pip
+pip install fastapi uvicorn fastembed pydantic
+```
+
+3. Download the model (optional):
+
+```bash
+python main.py download
+```
 
 ## Usage
 
@@ -49,69 +53,74 @@ This API allows you to rerank a list of documents based on their relevance to a 
 python main.py serve
 ```
 
-Or with custom port:
-```bash
-PORT=8080 python main.py serve
-```
+By default, the server runs on port 8000. You can modify this by setting the `PORT` environment variable.
 
-### Docker
+### API Endpoints
 
-```bash
-docker build -t multilingual-reranker .
-docker run -p 8000:8000 multilingual-reranker
-```
+#### GET `/info`
 
-## API Endpoints
+Returns information about the API, including model name, version, build ID, and commit SHA.
 
-### GET `/`
-
-Redirects to the API documentation.
-
-### GET `/info`
-
-Returns information about the service, including:
-- Model name
-- Version
-- Build ID
-- Commit SHA
-
-### POST `/rerank`
-
-Reranks documents based on their relevance to a query.
-
-#### Request Body
+**Response:**
 
 ```json
 {
-  "query": "Your search query",
+  "model_name": "jinaai/jina-reranker-v2-base-multilingual",
+  "version": "your-version",
+  "build_id": "your-build-id",
+  "commit_sha": "your-commit-sha"
+}
+```
+
+#### POST `/rerank`
+
+Reranks a list of documents based on their relevance to a query.
+
+**Request Body:**
+
+```json
+{
+  "query": "your search query",
   "documents": [
     {
-      "text": "Document content 1",
-      "metadata": {"source": "wiki", "id": "12345"}
+      "text": "document content 1",
+      "metadata": {
+        "source": "web",
+        "id": 123
+      }
     },
     {
-      "text": "Document content 2",
-      "metadata": {"source": "web", "id": "67890"}
+      "text": "document content 2",
+      "metadata": {
+        "source": "database",
+        "id": 456
+      }
     }
   ],
   "max_length": 1024
 }
 ```
 
-#### Response
+**Response:**
 
 ```json
 [
   {
-    "text": "Document content 2",
-    "metadata": {"source": "web", "id": "67890"},
-    "score": 0.92,
+    "text": "document content 2",
+    "metadata": {
+      "source": "database",
+      "id": 456
+    },
+    "score": 0.95,
     "rank": 1
   },
   {
-    "text": "Document content 1",
-    "metadata": {"source": "wiki", "id": "12345"},
-    "score": 0.75,
+    "text": "document content 1",
+    "metadata": {
+      "source": "web",
+      "id": 123
+    },
+    "score": 0.82,
     "rank": 2
   }
 ]
@@ -119,13 +128,12 @@ Reranks documents based on their relevance to a query.
 
 ## Environment Variables
 
-- `PORT`: Server port (default: 8000)
+- `PORT`: Port to run the server on (default: 8000)
 
 ## License
 
-Copyright (c) 2025 Code Inc. - All Rights Reserved
+This project is licensed under the MIT License - see the license notice in the code for details.
 
-Unauthorized copying of this file, via any medium is strictly prohibited.
-Proprietary and confidential.
+## Author
 
-Visit [Code Inc](https://www.codeinc.co) for more information.
+Joan Fabrégat <j@fabreg.at>

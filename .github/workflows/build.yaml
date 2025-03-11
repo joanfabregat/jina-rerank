@@ -68,8 +68,6 @@ jobs:
           tags: |
             type=raw,value=${{ github.ref_name }}
             type=raw,event=tag,value=latest
-            type=raw,event=branch,value=${{ github.ref_name }}-${{ github.sha }}
-            type=raw,event=branch,value=${{ github.ref_name }}-latest
             type=sha
 
       - name: Build and push Docker image with BuildKit caching

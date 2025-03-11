@@ -25,26 +25,10 @@ PORT = int(os.getenv("PORT", "8000"))
 ##
 # Models
 ##
-class Document(BaseModel):
-    text: str = Field(..., description="The text of the document")
-    metadata: dict[str, int | float | str | None] = Field(default_factory=dict, description="Metadata of the document")
-
-
-class ScoredDocument(Document):
-    score: float
-    rank: int
-
-
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
-    documents: conlist(Document, min_length=2) = Field(..., description="List of documents to rerank")
+    documents: conlist(str, min_length=2) = Field(..., description="List of documents to rerank")
     max_length: int = Field(1024, description="Maximum sequence length for the model")
-
-
-class RerankResponse(BaseModel):
-    ranked_documents: list[ScoredDocument]
-    query: str
-    computation_time: float = Field(..., description="Time taken to compute the reranking in seconds")
 
 
 class InfoResponse(BaseModel):
@@ -87,31 +71,20 @@ async def info():
     return InfoResponse()
 
 
-@app.post("/rerank", response_model=list[ScoredDocument])
+@app.post("/rerank", response_model=list[float])
 async def rerank(request: RerankRequest = Body(...)):
     try:
         # Compute the embeddings
-        scores = list(reranker.rerank(
-            request.query,
-            documents=[doc.text for doc in request.documents])
-        )
-
-        # Rank the documents
-        doc_scores = list(zip(request.documents, scores))
-        ranked_docs = sorted(doc_scores, key=lambda x: x[1], reverse=True)
-        reranked_documents = [
-            ScoredDocument(
-                rank=i + 1,
-                score=float(score),
-                **doc.model_dump(),
+        scores = list(
+            reranker.rerank(
+                request.query,
+                documents=request.documents
             )
-            for i, (doc, score) in enumerate(ranked_docs)
-        ]
+        )
+        return scores
 
-        return reranked_documents
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error during reranking: {str(e)}") from e
+    except Exception as e_:
+        raise HTTPException(status_code=500, detail=f"Error during reranking: {str(e_)}") from e_
 
 
 if __name__ == "__main__":

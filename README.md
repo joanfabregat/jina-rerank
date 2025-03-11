@@ -56,20 +56,8 @@ Reranks a list of documents based on their relevance to a query.
 {
   "query": "your search query",
   "documents": [
-    {
-      "text": "document content 1",
-      "metadata": {
-        "source": "web",
-        "id": 123
-      }
-    },
-    {
-      "text": "document content 2",
-      "metadata": {
-        "source": "database",
-        "id": 456
-      }
-    }
+    "document content 1",
+    "document content 2"
   ],
   "max_length": 1024
 }
@@ -79,24 +67,8 @@ Reranks a list of documents based on their relevance to a query.
 
 ```json
 [
-  {
-    "text": "document content 2",
-    "metadata": {
-      "source": "database",
-      "id": 456
-    },
-    "score": 0.95,
-    "rank": 1
-  },
-  {
-    "text": "document content 1",
-    "metadata": {
-      "source": "web",
-      "id": 123
-    },
-    "score": 0.82,
-    "rank": 2
-  }
+  0.95,
+  0.82
 ]
 ```
 

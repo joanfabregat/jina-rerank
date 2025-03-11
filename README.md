@@ -1,6 +1,6 @@
 # Multilingual Reranker API
 
-[![Build and Push to GHCR](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml/badge.svg)](https://github.com/joanfabregat/reranker/actions/workflows/build-ghcr.yaml)
+[![Build and Push to GHCR and Docker Hub](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml/badge.svg)](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml)
 
 A FastAPI service that reranks documents based on query relevance using Jina's multilingual reranker model [`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual).
 

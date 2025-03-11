@@ -17,7 +17,7 @@ This API allows you to rerank a list of documents based on their relevance to a 
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.13+
 - FastAPI
 - Pydantic
 - fastembed

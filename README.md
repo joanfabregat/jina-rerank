@@ -47,8 +47,6 @@ python main.py download
 
 ## Usage
 
-Documentation for the API can be found at `/docs` or `/redoc` when running the server.
-
 ### Starting the Server
 
 ```bash
@@ -56,6 +54,8 @@ python main.py serve
 ```
 
 By default, the server runs on port 8000. You can modify this by setting the `PORT` environment variable.
+
+Documentation for the API can be found at `/docs` or `/redoc` when running the server.
 
 ### API Endpoints
 

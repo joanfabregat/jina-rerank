@@ -110,4 +110,4 @@ This project is licensed under the MIT License - see the license notice in the c
 
 ## Author
 
-Joan Fabrégat <j@fabreg.at>
+Developed by Joan Fabrégat, j@fabreg.at

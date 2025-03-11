@@ -63,11 +63,11 @@ docker run -p 8000:8000 multilingual-reranker
 
 ## API Endpoints
 
-### GET /
+### GET `/`
 
 Redirects to the API documentation.
 
-### GET /info
+### GET `/info`
 
 Returns information about the service, including:
 - Model name
@@ -75,7 +75,7 @@ Returns information about the service, including:
 - Build ID
 - Commit SHA
 
-### POST /rerank
+### POST `/rerank`
 
 Reranks documents based on their relevance to a query.
 
@@ -119,9 +119,6 @@ Reranks documents based on their relevance to a query.
 
 ## Environment Variables
 
-- `VERSION`: Service version
-- `BUILD_ID`: Build identifier
-- `COMMIT_SHA`: Commit identifier
 - `PORT`: Server port (default: 8000)
 
 ## License

@@ -2,137 +2,133 @@
 
 [![Build and Push to GHCR and Docker Hub](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml/badge.svg)](https://github.com/joanfabregat/jina-rerank/actions/workflows/build.yaml)
 
-A FastAPI service that reranks documents based on query relevance using Jina's multilingual reranker model [`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual).
+A FastAPI service that provides document reranking capabilities based on query relevance using the [`jinaai/jina-reranker-v2-base-multilingual`](https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual) model.
 
 ## Overview
 
-This API provides an endpoint for reranking a list of documents based on their relevance to a query. It uses a pre-trained multilingual model to compute similarity scores between the query and each document, then returns the documents sorted by relevance.
+This API allows you to rerank a list of documents based on their relevance to a given query. It utilizes a cross-encoder reranking model from Jina AI that supports multiple languages.
 
 ## Features
 
-- Rerank documents based on semantic similarity to a query
-- Multilingual support through Jina's reranker model
-- FastAPI interface with automatic OpenAPI documentation
-- Robust error handling and input validation
-- Optimized for performance with PyTorch
+- Multilingual support for document reranking
+- REST API with FastAPI
+- Automatic API documentation
+- Docker support
 
 ## Requirements
 
 - Python 3.8+
-- PyTorch
 - FastAPI
-- Uvicorn
-- Jina reranker model dependencies
+- Pydantic
+- fastembed
+- uvicorn (for serving)
 
 ## Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/codeinc/multilingual-reranker.git
-cd multilingual-reranker
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/codeinc/multilingual-reranker.git
+   cd multilingual-reranker
+   ```
 
-# Install dependencies
-pip install -r requirements.txt
-```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Download the model:
+   ```bash
+   python main.py download
+   ```
 
 ## Usage
 
-### Starting the server
+### Starting the Server
 
 ```bash
-python -m app
+python main.py serve
 ```
 
-The API will be available at `http://localhost:{PORT}` where `PORT` is defined in your config.
-
-### API Endpoints
-
-#### GET /
-
-Returns basic information about the API:
-
-```json
-{
-  "model_name": "jina-multilingual-reranker",
-  "device": "cuda:0",
-  "version": "1.0.0",
-  "build_id": "abc123",
-  "commit_sha": "def456"
-}
+Or with custom port:
+```bash
+PORT=8080 python main.py serve
 ```
-
-#### POST /rerank
-
-Reranks documents based on query relevance.
-
-Request body:
-
-```json
-{
-  "query": "What is machine learning?",
-  "documents": [
-    "Machine learning is a branch of artificial intelligence.",
-    "Data science involves extracting knowledge from data.",
-    "Natural language processing deals with interactions between computers and human language."
-  ]
-}
-```
-
-Response:
-
-```json
-{
-  "query": "What is machine learning?",
-  "ranked_documents": [
-    {
-      "document": "Machine learning is a branch of artificial intelligence.",
-      "score": 0.95,
-      "rank": 1
-    },
-    {
-      "document": "Data science involves extracting knowledge from data.",
-      "score": 0.72,
-      "rank": 2
-    },
-    {
-      "document": "Natural language processing deals with interactions between computers and human language.",
-      "score": 0.64,
-      "rank": 3
-    }
-  ]
-}
-```
-
-## Configuration
-
-The service can be configured via the following parameters in the `config.py` file:
-
-- `VERSION`: API version string
-- `PORT`: Port number for the server
-- `BUILD_ID`: Build identifier
-- `COMMIT_SHA`: Git commit hash
-- Other model-specific configuration
-
-## Error Handling
-
-The API responds with appropriate HTTP status codes:
-
-- `400 Bad Request`: Invalid input (e.g., fewer than 2 documents)
-- `500 Internal Server Error`: Issues during reranking process
-
-## Deployment
 
 ### Docker
 
 ```bash
-# Build Docker image
-docker build -t jina-reranker .
-
-# Run container
-docker run -p 8000:8000 jina-reranker
+docker build -t multilingual-reranker .
+docker run -p 8000:8000 multilingual-reranker
 ```
+
+## API Endpoints
+
+### GET /
+
+Redirects to the API documentation.
+
+### GET /info
+
+Returns information about the service, including:
+- Model name
+- Version
+- Build ID
+- Commit SHA
+
+### POST /rerank
+
+Reranks documents based on their relevance to a query.
+
+#### Request Body
+
+```json
+{
+  "query": "Your search query",
+  "documents": [
+    {
+      "text": "Document content 1",
+      "metadata": {"source": "wiki", "id": "12345"}
+    },
+    {
+      "text": "Document content 2",
+      "metadata": {"source": "web", "id": "67890"}
+    }
+  ],
+  "max_length": 1024
+}
+```
+
+#### Response
+
+```json
+[
+  {
+    "text": "Document content 2",
+    "metadata": {"source": "web", "id": "67890"},
+    "score": 0.92,
+    "rank": 1
+  },
+  {
+    "text": "Document content 1",
+    "metadata": {"source": "wiki", "id": "12345"},
+    "score": 0.75,
+    "rank": 2
+  }
+]
+```
+
+## Environment Variables
+
+- `VERSION`: Service version
+- `BUILD_ID`: Build identifier
+- `COMMIT_SHA`: Commit identifier
+- `PORT`: Server port (default: 8000)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
+Copyright (c) 2025 Code Inc. - All Rights Reserved
+
+Unauthorized copying of this file, via any medium is strictly prohibited.
+Proprietary and confidential.
+
+Visit [Code Inc](https://www.codeinc.co) for more information.

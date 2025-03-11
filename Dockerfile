@@ -1,7 +1,7 @@
 ARG PYTHON_VERSION=3.13
 
 # --- Builder Stage ---
-FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
+FROM python:${PYTHON_VERSION}-slim AS builder
 WORKDIR /app
 
 # Install uv and its dependencies
@@ -16,7 +16,7 @@ RUN uv sync --frozen
 
 
 # --- Final Image ---
-FROM python:${PYTHON_VERSION}-slim-bookworm
+FROM python:${PYTHON_VERSION}-slim AS final
 WORKDIR /app
 
 ARG PORT=80

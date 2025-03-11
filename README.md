@@ -17,43 +17,15 @@ multilingual reranker model that can handle content in multiple languages.
 - **Metadata Preservation**: Maintains document metadata throughout the reranking process
 - **Performance Metrics**: Includes computation time in responses
 
-## Installation
-
-### Requirements
-
-- Python 3.13
-- FastAPI
-- Uvicorn
-- Fastembed
-- Pydantic
-
-### Setup
-
-1. Clone the repository
-2. Install dependencies:
-
-```bash
-# Using UV
-uv sync --frozen
-# Using pip
-pip install fastapi uvicorn fastembed pydantic
-```
-
-3. Download the model (optional):
-
-```bash
-python main.py download
-```
-
 ## Usage
 
 ### Starting the Server
 
-```bash
-python main.py serve
-```
+The recommended way to run this service is using Docker.
 
-By default, the server runs on port 8000. You can modify this by setting the `PORT` environment variable.
+```shell
+docker run -p 8000:8000 joanfabregat/jina-rerank:latest
+```
 
 Documentation for the API can be found at `/docs` or `/redoc` when running the server.
 

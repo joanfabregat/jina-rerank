@@ -47,6 +47,8 @@ python main.py download
 
 ## Usage
 
+Documentation for the API can be found at `/docs` or `/redoc` when running the server.
+
 ### Starting the Server
 
 ```bash

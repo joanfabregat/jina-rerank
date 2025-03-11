@@ -11,18 +11,5 @@ dependencies = [
     "fastapi>=0.95.0",
     "uvicorn>=0.22.0",
     "pydantic>=2.0.0",
-    "transformers>=4.30.0",
-    "einops>=0.8.1",
-    "torch>=2.6.0",
-]
-
-# https://docs.astral.sh/uv/guides/integration/pytorch/#configuring-accelerators-with-environment-markers
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[tool.uv.sources]
-torch = [
-    { index = "pytorch-cpu" },
+    "fastembed>=0.6.0",
 ]

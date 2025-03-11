@@ -6,11 +6,10 @@
 import os
 import time
 
-import torch
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field, conlist
-from transformers import AutoModelForSequenceClassification
+from fastembed.rerank.cross_encoder import TextCrossEncoder
 
 ##
 # Load the config
@@ -49,7 +48,6 @@ class RerankResponse(BaseModel):
 
 class InfoResponse(BaseModel):
     model_name: str = MODEL_NAME
-    device: str
     version: str = VERSION
     build_id: str = BUILD_ID
     commit_sha: str = COMMIT_SHA
@@ -69,18 +67,7 @@ app = FastAPI(
 ##
 try:
     print(f"Loading model {MODEL_NAME}...")
-    model = AutoModelForSequenceClassification.from_pretrained(
-        MODEL_NAME,
-        torch_dtype="auto",
-        trust_remote_code=True,
-    )
-    device = (
-        torch.device("cuda") if torch.cuda.is_available()
-        else torch.device("mps") if torch.mps.is_available()
-        else torch.device("cpu")
-    )
-    model.eval()
-    model.to(device)
+    reranker = TextCrossEncoder(model_name=MODEL_NAME)
     print(f"Model {MODEL_NAME} loaded successfully")
 except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")
@@ -89,29 +76,29 @@ except Exception as e:
 ##
 # Routes
 ##
-
+@app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")
 
 
 @app.get("/info", response_model=InfoResponse)
 async def info():
-    return InfoResponse(device=str(device))
+    return InfoResponse()
 
 
-@app.post("/rerank", response_model=RerankResponse)
+@app.post("/rerank", response_model=list[ScoredDocument])
 async def rerank(request: RerankRequest = Body(...)):
-    start_time = time.time()
-
     try:
-        sentence_pairs = [[request.query, doc.text] for doc in request.documents]
+        # Compute the embeddings
+        scores = list(reranker.rerank(
+            request.query,
+            documents=[doc.text for doc in request.documents])
+        )
 
-        with torch.no_grad():
-            scores = model.compute_score(sentence_pairs, max_length=request.max_length)
-
+        # Rank the documents
         doc_scores = list(zip(request.documents, scores))
         ranked_docs = sorted(doc_scores, key=lambda x: x[1], reverse=True)
-        scored_documents = [
+        reranked_documents = [
             ScoredDocument(
                 rank=i + 1,
                 score=float(score),
@@ -120,11 +107,7 @@ async def rerank(request: RerankRequest = Body(...)):
             for i, (doc, score) in enumerate(ranked_docs)
         ]
 
-        return RerankResponse(
-            ranked_documents=scored_documents,
-            query=request.query,
-            computation_time=time.time() - start_time,
-        )
+        return reranked_documents
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during reranking: {str(e)}") from e

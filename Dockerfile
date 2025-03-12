@@ -6,11 +6,6 @@
 # The Software is provided "as is", without warranty of any kind.
 
 ARG PYTHON_VERSION=3.13
-ARG COMPUTE_DEVICE=cpu
-ARG PORT=80
-ARG VERSION
-ARG BUILD_ID
-ARG COMMIT_SHA
 
 
 # --- Builder Image ---
@@ -37,7 +32,11 @@ RUN uv sync --frozen --no-default-groups $( [ "$COMPUTE_DEVICE" = "gpu" ] && ech
 # --- Final Image ---
 FROM python:${PYTHON_VERSION}-slim AS final
 
-WORKDIR /app
+ARG COMPUTE_DEVICE=cpu
+ARG PORT=80
+ARG VERSION
+ARG BUILD_ID
+ARG COMMIT_SHA
 
 ENV PORT=${PORT}
 ENV VERSION=${VERSION}
@@ -45,6 +44,8 @@ ENV BUILD_ID=${BUILD_ID}
 ENV COMMIT_SHA=${COMMIT_SHA}
 ENV HF_HOME="/app/.cache/huggingface"
 ENV COMPUTE_DEVICE=${COMPUTE_DEVICE}
+
+WORKDIR /app
 
 # Copy the virtual environment
 COPY --from=builder /app/.venv .venv

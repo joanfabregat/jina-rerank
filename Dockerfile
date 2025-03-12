@@ -26,11 +26,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy dependency specification and install production dependencies
 COPY uv.lock pyproject.toml ./
-RUN if [ "$COMPUTE_DEVICE" = "gpu" ]; then \
-      uv sync --group gpu --frozen --no-default-groups; \
-    else \
-      uv sync --frozen --no-default-groups; \
-    fi
+RUN uv sync --frozen --no-default-groups $( [ "$COMPUTE_DEVICE" = "gpu" ] && echo "--group gpu" )
 
 
 

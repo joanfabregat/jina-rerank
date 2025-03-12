@@ -1,6 +1,6 @@
 [project]
 name = "jina-rerank"
-version = "v0.4.2"
+version = "v0.4.3"
 urls = { "homepage" = "https://github.com/joanfabregat/jina-rerank" }
 description = "A multilingual reranker API based on jinaai/jina-reranker-v2-base-multilingual"
 authors = [

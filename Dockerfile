@@ -11,7 +11,6 @@ ARG PYTHON_VERSION=3.13
 # --- Builder Image ---
 FROM python:${PYTHON_VERSION}-slim AS builder
 
-ARG PYTHON_VERSION=3.13
 ARG COMPUTE_DEVICE=cpu
 
 WORKDIR /app
@@ -19,12 +18,11 @@ WORKDIR /app
 # Install uv and its dependencies
 COPY --from=ghcr.io/astral-sh/uv:0.5.31 /uv /uvx /bin/
 RUN chmod +x /bin/uv /bin/uvx && \
-    uv venv .venv --python ${PYTHON_VERSION}
+    uv venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy dependency specification and install production dependencies
 COPY uv.lock pyproject.toml ./
-RUN echo "Installing dependencies with compute device: $COMPUTE_DEVICE"
 RUN uv sync --frozen --no-default-groups $( [ "$COMPUTE_DEVICE" = "gpu" ] && echo "--group gpu" )
 
 

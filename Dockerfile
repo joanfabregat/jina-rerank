@@ -16,6 +16,9 @@ ARG COMMIT_SHA
 # --- Builder Image ---
 FROM python:${PYTHON_VERSION}-slim AS builder
 
+ARG PYTHON_VERSION=3.13
+ARG COMPUTE_DEVICE=cpu
+
 WORKDIR /app
 
 # Install uv and its dependencies

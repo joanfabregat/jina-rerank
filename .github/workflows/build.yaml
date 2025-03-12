@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         #compute_device: [ cpu, gpu ]
-      compute_device: [ cpu ]
+        compute_device: [ cpu ]
 
     steps:
       - name: Checkout repository

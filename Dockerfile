@@ -11,7 +11,7 @@ ARG PYTHON_VERSION=3.13
 # --- Builder Image ---
 FROM python:${PYTHON_VERSION}-slim AS builder
 
-ARG COMPUTE_DEVICE=cpu
+ARG COMPUTE_DEVICE
 
 WORKDIR /app
 

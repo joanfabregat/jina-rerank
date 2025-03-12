@@ -11,11 +11,11 @@ dependencies = [
     "fastapi>=0.95.0",
     "uvicorn>=0.22.0",
     "pydantic>=2.0.0",
-    "fastembed>=0.6.0",
+    "fastembed==0.6.0",
 ]
 
 
 [dependency-groups]
 gpu = [
-    "fastembed-gpu>=0.6.0",
+    "fastembed-gpu==0.6.0",
 ]

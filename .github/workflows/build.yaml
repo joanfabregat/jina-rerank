@@ -27,7 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compute_device: [ cpu, gpu ]
+        #compute_device: [ cpu, gpu ]
+      compute_device: [ cpu ]
 
     steps:
       - name: Checkout repository

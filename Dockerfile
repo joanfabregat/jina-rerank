@@ -1,23 +1,23 @@
 ARG PYTHON_VERSION=3.13
 
 # --- UV Builder Stage ---
-FROM python:${PYTHON_VERSION}-slim AS uv-builder
+FROM python:${PYTHON_VERSION}-slim AS builder
+
 WORKDIR /app
 
+ARG COMPUTE_DEVICE=cpu
+
 COPY --from=ghcr.io/astral-sh/uv:0.5.31 /uv /uvx /bin/
+
 RUN chmod +x /bin/uv /bin/uvx && \
     uv venv .venv --python ${PYTHON_VERSION}
 ENV PATH="/app/.venv/bin:$PATH"
 
-
-# --- GPU Builder Stage ---
-FROM uv-builder AS gpu-builder
-RUN uv sync --group gpu --frozen
-
-
-# --- CPU Builder Stage ---
-FROM uv-builder AS cpu-builder
-RUN uv sync --frozen
+RUN if [ "$COMPUTE_DEVICE" = "gpu" ]; then \
+      uv sync --group gpu --frozen; \
+    else \
+      uv sync --frozen; \
+    fi
 
 
 # --- Final Image ---
@@ -38,7 +38,7 @@ ENV HF_HOME="/app/.cache/huggingface"
 ENV COMPUTE_DEVICE=${COMPUTE_DEVICE}
 
 # Copy the virtual environment
-COPY --from=${COMPUTE_DEVICE}-builder /app/.venv .venv
+COPY --from=builder /app/.venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the application code

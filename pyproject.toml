@@ -17,5 +17,5 @@ dependencies = [
 
 [dependency-groups]
 gpu = [
-    "fastembed-gpu",
+    "fastembed-gpu>=0.6.0",
 ]

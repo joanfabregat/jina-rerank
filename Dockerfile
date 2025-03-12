@@ -1,37 +1,43 @@
+# Copyright (c) 2025 Joan Fabrégat <j@fabreg.at>
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, subject to the conditions in the full MIT License.
+# The Software is provided "as is", without warranty of any kind.
+
 ARG PYTHON_VERSION=3.13
-
-# --- UV Builder Stage ---
-FROM python:${PYTHON_VERSION}-slim AS builder
-
-WORKDIR /app
-
 ARG COMPUTE_DEVICE=cpu
-
-COPY --from=ghcr.io/astral-sh/uv:0.5.31 /uv /uvx /bin/
-
-RUN chmod +x /bin/uv /bin/uvx && \
-    uv venv .venv --python ${PYTHON_VERSION}
-ENV PATH="/app/.venv/bin:$PATH"
-
-COPY pyproject.toml .
-COPY uv.lock .
-
-RUN if [ "$COMPUTE_DEVICE" = "gpu" ]; then \
-      uv sync --group gpu --frozen; \
-    else \
-      uv sync --frozen; \
-    fi
-
-
-# --- Final Image ---
-FROM python:${PYTHON_VERSION}-slim AS final
-WORKDIR /app
-
 ARG PORT=80
 ARG VERSION
 ARG BUILD_ID
 ARG COMMIT_SHA
-ARG COMPUTE_DEVICE=cpu
+
+
+# --- Builder Image ---
+FROM python:${PYTHON_VERSION}-slim AS builder
+
+WORKDIR /app
+
+# Install uv and its dependencies
+COPY --from=ghcr.io/astral-sh/uv:0.5.31 /uv /uvx /bin/
+RUN chmod +x /bin/uv /bin/uvx && \
+    uv venv .venv --python ${PYTHON_VERSION}
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Copy dependency specification and install production dependencies
+COPY uv.lock pyproject.toml ./
+RUN if [ "$COMPUTE_DEVICE" = "gpu" ]; then \
+      uv sync --group gpu --frozen --no-default-groups; \
+    else \
+      uv sync --frozen --no-default-groups; \
+    fi
+
+
+
+# --- Final Image ---
+FROM python:${PYTHON_VERSION}-slim AS final
+
+WORKDIR /app
 
 ENV PORT=${PORT}
 ENV VERSION=${VERSION}

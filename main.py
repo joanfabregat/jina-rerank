@@ -16,11 +16,11 @@ from pydantic import BaseModel, Field, conlist
 # Load the config
 ##
 MODEL_NAME = 'jinaai/jina-reranker-v2-base-multilingual'
-COMPUTE_DEVICE = os.getenv("COMPUTE_DEVICE", "cpu")
+COMPUTE_DEVICE = os.getenv("COMPUTE_DEVICE") or "cpu"
 VERSION = os.getenv("VERSION") or "unknown"
 BUILD_ID = os.getenv("BUILD_ID") or "unknown"
 COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
-PORT = int(os.getenv("PORT", "8000"))
+PORT = int(os.getenv("PORT") or "8000")
 
 
 ##

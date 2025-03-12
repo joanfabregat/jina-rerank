@@ -13,6 +13,9 @@ RUN chmod +x /bin/uv /bin/uvx && \
     uv venv .venv --python ${PYTHON_VERSION}
 ENV PATH="/app/.venv/bin:$PATH"
 
+COPY pyproject.toml .
+COPY uv.lock .
+
 RUN if [ "$COMPUTE_DEVICE" = "gpu" ]; then \
       uv sync --group gpu --frozen; \
     else \

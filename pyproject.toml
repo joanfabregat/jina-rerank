@@ -17,5 +17,6 @@ dependencies = [
 
 [dependency-groups]
 gpu = [
+    "onnxruntime-gpu>=1.21.0",
     "fastembed-gpu==0.6.0",
 ]

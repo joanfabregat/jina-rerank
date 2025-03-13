@@ -54,6 +54,23 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Copy the application code
 COPY main.py .
 
+# Install the CUDA toolkit if needed
+RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        # If using the new DEB822 format
+        sed -i 's/Components: main/Components: main contrib non-free-firmware non-free/g' /etc/apt/sources.list.d/debian.sources; \
+    elif [ -f /etc/apt/sources.list ]; then \
+        # If using the traditional format in sources.list
+        sed -i '/^deb/ s/$/ contrib non-free-firmware non-free/' /etc/apt/sources.list; \
+    else \
+        # Fallback to creating our own sources file
+        echo "deb http://deb.debian.org/debian bookworm main contrib non-free-firmware non-free" > /etc/apt/sources.list; \
+    fi && \
+    apt-get update && \
+    apt-get upgrade -y && \
+    #apt-get install -y nvidia-cuda-toolkit && \
+    apt-get install -y libcublas11
+
+
 # Ensure a non-root user
 RUN addgroup --system app &&  \
     adduser --system --group --no-create-home app && \

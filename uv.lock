@@ -225,12 +225,14 @@ version = "0.4.3"
 source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
-    { name = "fastembed" },
     { name = "pydantic" },
     { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
+cpu = [
+    { name = "fastembed" },
+]
 gpu = [
     { name = "fastembed-gpu" },
 ]
@@ -238,12 +240,12 @@ gpu = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.95.0" },
-    { name = "fastembed", specifier = "==0.6.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "uvicorn", specifier = ">=0.22.0" },
 ]
 
 [package.metadata.requires-dev]
+cpu = [{ name = "fastembed", specifier = "==0.6.0" }]
 gpu = [{ name = "fastembed-gpu", specifier = "==0.6.0" }]
 
 [[package]]

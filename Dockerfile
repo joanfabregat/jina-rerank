@@ -11,7 +11,7 @@ ARG PYTHON_VERSION=3.13
 # --- Builder Image ---
 FROM python:${PYTHON_VERSION}-slim AS builder
 
-ARG COMPUTE_DEVICE
+ARG COMPUTE_DEVICE=cpu
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy dependency specification and install production dependencies
 COPY uv.lock pyproject.toml ./
-RUN uv sync --frozen --no-default-groups $( [ "$COMPUTE_DEVICE" = "gpu" ] && echo "--group gpu" )
+RUN uv sync --frozen --no-default-groups --group ${COMPUTE_DEVICE}
 
 
 # --- Final Image ---

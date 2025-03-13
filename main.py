@@ -21,6 +21,17 @@ VERSION = os.getenv("VERSION") or "unknown"
 BUILD_ID = os.getenv("BUILD_ID") or "unknown"
 COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
 PORT = int(os.getenv("PORT") or "8000")
+PROVIDERS: dict[str, list[str]] = {
+    "cpu": ["CPUExecutionProvider"],
+    "gpu": ["CUDAExecutionProvider"],
+    # https://onnxruntime.ai/docs/execution-providers/CoreML-ExecutionProvider.html
+    "coreml": [('CoreMLExecutionProvider', {
+        "ModelFormat": "MLProgram",
+        "MLComputeUnits": "ALL",
+        # "RequireStaticInputShapes": "0", 
+        # "EnableOnSubgraphs": "0"
+    })]
+}
 
 
 ##
@@ -54,10 +65,15 @@ app = FastAPI(
 ##
 try:
     print(f"Loading model {MODEL_NAME}...")
-    reranker = TextCrossEncoder(
-        model_name=MODEL_NAME,
-        providers=["CUDAExecutionProvider"] if COMPUTE_DEVICE == "gpu" else ["CPUExecutionProvider"]
-    )
+
+    # Select the provider
+    provider = PROVIDERS[COMPUTE_DEVICE]
+    if not provider:
+        raise ValueError(f"Invalid compute device: {COMPUTE_DEVICE}")
+
+    # Load the model
+    reranker = TextCrossEncoder(model_name=MODEL_NAME, providers=provider)
+
     print(f"Model {MODEL_NAME} loaded successfully")
 except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")

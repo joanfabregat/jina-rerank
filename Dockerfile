@@ -55,12 +55,12 @@ COPY main.py .
 
 # Install the CUDA toolkit if needed
 # https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#network-repo-installation-for-debian
-RUN apt-get update
-RUN apt-get install -y wget
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cuda-keyring_1.1-1_all.deb
-RUN dpkg -i cuda-keyring_1.1-1_all.deb
-RUN apt-get update
-RUN apt-get -y install cuda-toolkit
+#RUN apt-get update
+#RUN apt-get install -y wget
+#RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cuda-keyring_1.1-1_all.deb
+#RUN dpkg -i cuda-keyring_1.1-1_all.deb
+#RUN apt-get update
+#RUN apt-get -y install cuda-toolkit
 
 # Ensure a non-root user
 RUN addgroup --system app &&  \
@@ -74,3 +74,4 @@ RUN python -m main download
 
 EXPOSE $PORT
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --log-level info --timeout-keep-alive 0"]
+

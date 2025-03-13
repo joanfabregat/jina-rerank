@@ -9,7 +9,7 @@ ARG PYTHON_VERSION=3.13
 
 
 # --- Builder Image ---
-FROM python:${PYTHON_VERSION}-bookworm AS builder
+FROM python:${PYTHON_VERSION}-slim AS builder
 
 ARG COMPUTE_DEVICE
 
@@ -28,7 +28,7 @@ RUN uv sync --frozen --no-default-groups $( [ "$COMPUTE_DEVICE" = "gpu" ] && ech
 
 
 # --- Final Image ---
-FROM python:${PYTHON_VERSION}-bookworm AS final
+FROM python:${PYTHON_VERSION}-slim AS final
 
 ARG COMPUTE_DEVICE=cpu
 ARG PORT=80

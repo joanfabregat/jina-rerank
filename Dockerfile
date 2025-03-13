@@ -55,20 +55,28 @@ ENV PATH="/app/.venv/bin:$PATH"
 COPY main.py .
 
 # Install the CUDA toolkit if needed
-RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-        # If using the new DEB822 format
-        sed -i 's/Components: main/Components: main contrib non-free-firmware non-free/g' /etc/apt/sources.list.d/debian.sources; \
-    elif [ -f /etc/apt/sources.list ]; then \
-        # If using the traditional format in sources.list
-        sed -i '/^deb/ s/$/ contrib non-free-firmware non-free/' /etc/apt/sources.list; \
-    else \
-        # Fallback to creating our own sources file
-        echo "deb http://deb.debian.org/debian bookworm main contrib non-free-firmware non-free" > /etc/apt/sources.list; \
-    fi && \
-    apt-get update && \
-    apt-get upgrade -y && \
-    #apt-get install -y nvidia-cuda-toolkit && \
-    apt-get install -y libcublas11
+# https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#network-repo-installation-for-debian
+#RUN apt-get update
+#RUN apt-get install -y wget
+#RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cuda-keyring_1.1-1_all.deb
+#RUN dpkg -i cuda-keyring_1.1-1_all.deb
+#RUN apt-get update
+#RUN apt-get -y install nvidia-cublas-cu126
+
+#RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+#        # If using the new DEB822 format
+#        sed -i 's/Components: main/Components: main contrib non-free-firmware non-free/g' /etc/apt/sources.list.d/debian.sources; \
+#    elif [ -f /etc/apt/sources.list ]; then \
+#        # If using the traditional format in sources.list
+#        sed -i '/^deb/ s/$/ contrib non-free-firmware non-free/' /etc/apt/sources.list; \
+#    else \
+#        # Fallback to creating our own sources file
+#        echo "deb http://deb.debian.org/debian bookworm main contrib non-free-firmware non-free" > /etc/apt/sources.list; \
+#    fi && \
+#    apt-get update && \
+#    apt-get upgrade -y && \
+#    #apt-get install -y nvidia-cuda-toolkit && \
+#    apt-get install -y libcublas12
 
 
 # Ensure a non-root user

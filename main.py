@@ -40,7 +40,7 @@ PROVIDERS: dict[str, list[str]] = {
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
     documents: conlist(str, min_length=2) = Field(..., description="List of documents to rerank")
-    max_length: int = Field(1024, description="Maximum sequence length for the model")
+    batch_size: int = Field(32, description="Batch size for the model")
 
 
 class InfoResponse(BaseModel):
@@ -99,7 +99,8 @@ async def rerank(request: RerankRequest = Body(...)):
         scores = list(
             reranker.rerank(
                 request.query,
-                documents=request.documents
+                documents=request.documents,
+                batch_size=request.batch_size
             )
         )
         return scores

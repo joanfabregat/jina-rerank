@@ -59,7 +59,7 @@ Reranks a list of documents based on their relevance to a query.
     "document content 1",
     "document content 2"
   ],
-  "max_length": 1024
+  "batch_size": 32
 }
 ```
 

@@ -81,6 +81,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.compute_device }}
           cache-to: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.compute_device }},mode=inline
           build-args: |

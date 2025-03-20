@@ -12,13 +12,13 @@ ARG PYTHON_VERSION=3.13
 FROM python:${PYTHON_VERSION}-slim AS builder
 
 
-WORKDIR /app
+WORKDIR /src
 
 # Install uv and its dependencies
 COPY --from=ghcr.io/astral-sh/uv:0.6.8 /uv /uvx /bin/
 RUN chmod +x /bin/uv /bin/uvx && \
     uv venv .venv
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/src/.venv/bin:$PATH"
 
 # Copy dependency specification and install production dependencies
 COPY uv.lock pyproject.toml ./
@@ -39,26 +39,24 @@ ENV PORT=${PORT}
 ENV VERSION=${VERSION}
 ENV BUILD_ID=${BUILD_ID}
 ENV COMMIT_SHA=${COMMIT_SHA}
-ENV HF_HOME="/app/.cache/huggingface"
 
-WORKDIR /app
+WORKDIR /src
+
+# Create a non-root user
+RUN addgroup --system app && adduser --system --group --no-create-home app
 
 # Copy the virtual environment
-COPY --from=builder /app/.venv .venv
-ENV PATH="/app/.venv/bin:$PATH"
+COPY --from=builder /src/.venv .venv
+ENV PATH="/src/.venv/bin:$PATH"
 
 # Copy the application code
-COPY main.py .
-
-# Ensure a non-root user
-RUN addgroup --system app &&  \
-    adduser --system --group --no-create-home app && \
-    chmod -R +x .venv/bin/ && \
-    chown -R app:app .
-USER app
+COPY main.py /src/main.py
 
 # Download the model
-RUN python -m main download
+RUN mkdir -p /src/.model && python -m main download
+
+# Use the non-root user
+USER app:app
 
 EXPOSE $PORT
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --log-level info --timeout-keep-alive 0"]

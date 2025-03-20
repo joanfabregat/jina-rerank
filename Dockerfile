@@ -11,7 +11,6 @@ ARG PYTHON_VERSION=3.13
 # --- Builder Image ---
 FROM python:${PYTHON_VERSION}-slim AS builder
 
-ARG COMPUTE_DEVICE=cpu
 
 WORKDIR /app
 
@@ -23,13 +22,12 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy dependency specification and install production dependencies
 COPY uv.lock pyproject.toml ./
-RUN uv sync --frozen --no-default-groups --group ${COMPUTE_DEVICE}
+RUN uv sync --frozen --no-default-groups
 
 
 # --- Final Image ---
 FROM python:${PYTHON_VERSION}-slim AS final
 
-ARG COMPUTE_DEVICE=cpu
 ARG PORT=80
 ARG VERSION
 ARG BUILD_ID
@@ -42,7 +40,6 @@ ENV VERSION=${VERSION}
 ENV BUILD_ID=${BUILD_ID}
 ENV COMMIT_SHA=${COMMIT_SHA}
 ENV HF_HOME="/app/.cache/huggingface"
-ENV COMPUTE_DEVICE=${COMPUTE_DEVICE}
 
 WORKDIR /app
 
@@ -52,15 +49,6 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the application code
 COPY main.py .
-
-# Install the CUDA toolkit if needed
-# https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#network-repo-installation-for-debian
-#RUN apt-get update
-#RUN apt-get install -y wget
-#RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cuda-keyring_1.1-1_all.deb
-#RUN dpkg -i cuda-keyring_1.1-1_all.deb
-#RUN apt-get update
-#RUN apt-get -y install cuda-toolkit
 
 # Ensure a non-root user
 RUN addgroup --system app &&  \

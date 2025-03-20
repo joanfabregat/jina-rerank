@@ -6,9 +6,6 @@
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <envs>
-      <env name="COMPUTE_DEVICE" value="cpu" />
-    </envs>
     <option name="SDK_HOME" value="$PROJECT_DIR$/.venv/bin/python" />
     <option name="SDK_NAME" value="Python 3.13 virtualenv at ~/Code/jina-rerank/.venv" />
     <option name="WORKING_DIRECTORY" value="" />

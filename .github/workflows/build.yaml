@@ -24,11 +24,7 @@ permissions:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        compute_device: [ cpu, gpu ]
-        #compute_device: [ cpu ]
+    runs-on: ubuntu-latest-large
 
     steps:
       - name: Checkout repository
@@ -70,9 +66,9 @@ jobs:
             ${{ env.DOCKERHUB_IMAGE }}
             ${{ env.GHCR_IMAGE }}
           tags: |
-            type=raw,value=${{ github.ref_name }}-${{ matrix.compute_device }}
-            type=raw,event=tag,value=latest-${{ matrix.compute_device }}
-            type=sha,suffix=-${{ matrix.compute_device }}
+            type=raw,value=${{ github.ref_name }}
+            type=raw,event=tag,value=latest
+            type=sha
 
       - name: Build and push Docker image with BuildKit caching
         uses: docker/build-push-action@v4
@@ -82,10 +78,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.compute_device }}
-          cache-to: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.compute_device }},mode=inline
+          cache-from: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache,mode=inline
           build-args: |
             VERSION=${{ github.ref_name }}
             BUILD_ID=${{ github.run_id }}
             COMMIT_SHA=${{ github.sha }}
-            COMPUTE_DEVICE=${{ matrix.compute_device }}

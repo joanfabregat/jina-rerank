@@ -16,7 +16,6 @@ from pydantic import BaseModel, Field, conlist
 # Load the config
 ##
 MODEL_NAME = 'jinaai/jina-reranker-v2-base-multilingual'
-COMPUTE_DEVICE = os.getenv("COMPUTE_DEVICE") or "cpu"
 VERSION = os.getenv("VERSION") or "unknown"
 BUILD_ID = os.getenv("BUILD_ID") or "unknown"
 COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
@@ -39,13 +38,12 @@ PROVIDERS: dict[str, list[str]] = {
 ##
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
-    documents: conlist(str, min_length=2) = Field(..., description="List of documents to rerank")
+    documents: list[str] = Field(..., description="List of documents to rerank")
     batch_size: int = Field(32, description="Batch size for the model")
 
 
 class InfoResponse(BaseModel):
     model_name: str = MODEL_NAME
-    compute_device: str = COMPUTE_DEVICE
     version: str = VERSION
     build_id: str = BUILD_ID
     commit_sha: str = COMMIT_SHA
@@ -65,15 +63,7 @@ app = FastAPI(
 ##
 try:
     print(f"Loading model {MODEL_NAME}...")
-
-    # Select the provider
-    provider = PROVIDERS[COMPUTE_DEVICE]
-    if not provider:
-        raise ValueError(f"Invalid compute device: {COMPUTE_DEVICE}")
-
-    # Load the model
-    reranker = TextCrossEncoder(model_name=MODEL_NAME, providers=provider)
-
+    reranker = TextCrossEncoder(model_name=MODEL_NAME)
     print(f"Model {MODEL_NAME} loaded successfully")
 except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")

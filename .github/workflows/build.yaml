@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest-large
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository

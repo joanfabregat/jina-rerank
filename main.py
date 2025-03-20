@@ -6,6 +6,7 @@
 #  The Software is provided "as is", without warranty of any kind.
 
 import os
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import RedirectResponse
@@ -52,7 +53,10 @@ app = FastAPI(
 ##
 try:
     print(f"Loading model {MODEL_NAME}...")
-    reranker = TextCrossEncoder(model_name=MODEL_NAME)
+    reranker = TextCrossEncoder(
+        model_name=MODEL_NAME,
+        cache_dir=str(Path(__file__).parent.absolute() / ".model")
+    )
     print(f"Model {MODEL_NAME} loaded successfully")
 except Exception as e:
     raise RuntimeError(f"Failed to load model: {str(e)}")

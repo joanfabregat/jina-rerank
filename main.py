@@ -10,7 +10,7 @@ import os
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import RedirectResponse
 from fastembed.rerank.cross_encoder import TextCrossEncoder
-from pydantic import BaseModel, Field, conlist
+from pydantic import BaseModel, Field
 
 ##
 # Load the config

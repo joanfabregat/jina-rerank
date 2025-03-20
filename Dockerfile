@@ -45,18 +45,21 @@ WORKDIR /src
 # Create a non-root user
 RUN addgroup --system app && adduser --system --group --no-create-home app
 
+# Create the model directory
+RUN mkdir -p /src/.model && chown app:app /src/.model
+
 # Copy the virtual environment
-COPY --from=builder /src/.venv .venv
+COPY --from=builder --chown=app:app /src/.venv .venv
 ENV PATH="/src/.venv/bin:$PATH"
 
 # Copy the application code
-COPY main.py /src/main.py
-
-# Download the model
-RUN mkdir -p /src/.model && python -m main download
+COPY --chown=app:app main.py /src/main.py
 
 # Use the non-root user
 USER app:app
+
+# Download the model
+RUN python -m main download
 
 EXPOSE $PORT
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --log-level info --timeout-keep-alive 0"]

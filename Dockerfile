@@ -60,4 +60,3 @@ USER app:app
 
 EXPOSE $PORT
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --log-level info --timeout-keep-alive 0"]
-

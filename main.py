@@ -10,7 +10,7 @@ import os
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.responses import RedirectResponse
 from fastembed.rerank.cross_encoder import TextCrossEncoder
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, conlist
 
 ##
 # Load the config
@@ -27,7 +27,7 @@ PORT = int(os.getenv("PORT") or "8000")
 ##
 class RerankRequest(BaseModel):
     query: str = Field(..., description="The search query")
-    documents: list[str] = Field(..., description="List of documents to rerank")
+    documents: conlist(str, min_length=1) = Field(..., description="List of documents to rerank")
     batch_size: int = Field(32, description="Batch size for the model")
 
 

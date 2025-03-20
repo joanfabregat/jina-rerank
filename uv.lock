@@ -124,27 +124,6 @@ wheels = [
 ]
 
 [[package]]
-name = "fastembed-gpu"
-version = "0.6.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "huggingface-hub" },
-    { name = "loguru" },
-    { name = "mmh3" },
-    { name = "numpy" },
-    { name = "onnxruntime-gpu" },
-    { name = "pillow" },
-    { name = "py-rust-stemmers" },
-    { name = "requests" },
-    { name = "tokenizers" },
-    { name = "tqdm" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/6a/ae/54d922e17b9b11841011d4b68d2bea1a77329ee0594971f655cebaeead6c/fastembed_gpu-0.6.0.tar.gz", hash = "sha256:8a6ceb102e976c4325ce393e2bac5654319a56e2216ad0e9c0cb45bc9e743a86", size = 50813 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/c2/bce4197cf681bc3f4096633725983c772acfc6021c3e7a237eb337c7efd5/fastembed_gpu-0.6.0-py3-none-any.whl", hash = "sha256:a4b8b0ffdd0004c011fa435e79e31e2b2b58740a74e5f425144b9a53e70c8c8f", size = 85438 },
-]
-
-[[package]]
 name = "filelock"
 version = "3.17.0"
 source = { registry = "https://pypi.org/simple" }
@@ -225,28 +204,18 @@ version = "0.4.3"
 source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
+    { name = "fastembed" },
     { name = "pydantic" },
     { name = "uvicorn" },
-]
-
-[package.dev-dependencies]
-cpu = [
-    { name = "fastembed" },
-]
-gpu = [
-    { name = "fastembed-gpu" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.95.0" },
+    { name = "fastembed", specifier = ">=0.6.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "uvicorn", specifier = ">=0.22.0" },
 ]
-
-[package.metadata.requires-dev]
-cpu = [{ name = "fastembed", specifier = "==0.6.0" }]
-gpu = [{ name = "fastembed-gpu", specifier = "==0.6.0" }]
 
 [[package]]
 name = "loguru"
@@ -341,24 +310,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/d3/ea/011dfc2536e46e2ea984d2c0256dc585ebb1352366dffdd98764f1f44ee4/onnxruntime-1.21.0-cp313-cp313-win_amd64.whl", hash = "sha256:19b630c6a8956ef97fb7c94948b17691167aa1aaf07b5f214fa66c3e4136c108", size = 11760731 },
     { url = "https://files.pythonhosted.org/packages/47/6b/a00f31322e91c610c7825377ef0cad884483c30d1370b896d57e7032e912/onnxruntime-1.21.0-cp313-cp313t-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:3995c4a2d81719623c58697b9510f8de9fa42a1da6b4474052797b0d712324fe", size = 14172215 },
     { url = "https://files.pythonhosted.org/packages/58/4b/98214f13ac1cd675dfc2713ba47b5722f55ce4fba526d2b2826f2682a42e/onnxruntime-1.21.0-cp313-cp313t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:36b18b8f39c0f84e783902112a0dd3c102466897f96d73bb83f6a6bff283a423", size = 15990612 },
-]
-
-[[package]]
-name = "onnxruntime-gpu"
-version = "1.21.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "coloredlogs" },
-    { name = "flatbuffers" },
-    { name = "numpy" },
-    { name = "packaging" },
-    { name = "protobuf" },
-    { name = "sympy" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d8/c2/3d4807b3555f80501ee126e4fad40f9a47a9d3882b0369e2d624e9d19df8/onnxruntime_gpu-1.21.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:379f473c767e3cbaa1ee8563de29060cbf813ffc79967e932c2ae5780394bbb7", size = 280810186 },
-    { url = "https://files.pythonhosted.org/packages/f2/49/465afd3264e4707900851f53412c5cebe964c7a4d3a04fe6836af4fc6604/onnxruntime_gpu-1.21.0-cp313-cp313-win_amd64.whl", hash = "sha256:e6e5d9dc78b8e16bc631e675af6b094449b7adf4ec41bb2aeaa69b25a6d8f181", size = 213081727 },
-    { url = "https://files.pythonhosted.org/packages/12/f2/4549463ba3b756041a492b9f9959a4a88c302246fd12d0601a01079d76b8/onnxruntime_gpu-1.21.0-cp313-cp313t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:5fb033a0647534590fc57219b59a12917c47bbdd79c41854a1549f3125306aea", size = 280804460 },
 ]
 
 [[package]]

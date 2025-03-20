@@ -20,17 +20,6 @@ VERSION = os.getenv("VERSION") or "unknown"
 BUILD_ID = os.getenv("BUILD_ID") or "unknown"
 COMMIT_SHA = os.getenv("COMMIT_SHA") or "unknown"
 PORT = int(os.getenv("PORT") or "8000")
-PROVIDERS: dict[str, list[str]] = {
-    "cpu": ["CPUExecutionProvider"],
-    "gpu": ["CUDAExecutionProvider"],
-    # https://onnxruntime.ai/docs/execution-providers/CoreML-ExecutionProvider.html
-    "coreml": [('CoreMLExecutionProvider', {
-        "ModelFormat": "MLProgram",
-        "MLComputeUnits": "ALL",
-        # "RequireStaticInputShapes": "0", 
-        # "EnableOnSubgraphs": "0"
-    })]
-}
 
 
 ##

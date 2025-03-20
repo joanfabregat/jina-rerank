@@ -16,7 +16,7 @@ ARG COMPUTE_DEVICE=cpu
 WORKDIR /app
 
 # Install uv and its dependencies
-COPY --from=ghcr.io/astral-sh/uv:0.5.31 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.6.8 /uv /uvx /bin/
 RUN chmod +x /bin/uv /bin/uvx && \
     uv venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
